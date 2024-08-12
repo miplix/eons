@@ -8,13 +8,14 @@
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
     min-height: 100vh;
     background-color: #000;
     font-family: Arial, sans-serif;
     color: #fff;
-    overflow: hidden;
+    overflow-x: hidden;
   }
   
   .stars {
@@ -24,41 +25,44 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
+    z-index: -1;
   }
   
   .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90%;
-    max-width: 1200px;
-    padding: 40px;
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .last-entry {
+    font-size: 16px;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+  
+  .era-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 20px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(5px);
   }
   
-  .last-entry {
-    font-size: 1.5vw;
-    margin-bottom: 20px;
-    text-align: center;
-    width: 100%;
-  }
-  
-  .main-content {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-  
-  .era-info {
-    flex: 1;
-    text-align: center;
-  }
-  
   .era-number {
-    font-size: 12vw;
+    font-size: 60px;
     font-weight: bold;
     color: #fff;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
@@ -66,44 +70,46 @@
   }
   
   .era-text {
-    font-size: 4vw;
-    margin-top: 20px;
+    font-size: 24px;
+    margin-top: 10px;
     color: #fff;
   }
   
   .cycle-text {
-    font-size: 3vw;
-    margin-top: 10px;
+    font-size: 20px;
+    margin-top: 5px;
     color: #ccc;
   }
   
   .countdown {
-    font-size: 1.5vw;
-    margin-top: 30px;
+    font-size: 16px;
+    margin-top: 15px;
     color: #ccc;
+    text-align: center;
   }
   
   .sunrise-times {
-    font-size: 1.2vw;
-    margin-top: 20px;
+    font-size: 14px;
+    margin-top: 10px;
     color: #ccc;
+    text-align: center;
   }
   
   #sunrise {
     width: 100%;
-    height: 100px;
+    height: 60px;
     position: relative;
     overflow: hidden;
-    margin-top: 30px;
+    margin-top: 15px;
   }
   
   #sun {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     background: #ffdb58;
     border-radius: 50%;
     position: absolute;
-    bottom: -30px;
+    bottom: -20px;
     left: 50%;
     transform: translateX(-50%);
     box-shadow: 0 0 20px #ffdb58;
@@ -111,20 +117,18 @@
   }
   
   .checkboxes {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-left: 40px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 20px;
   }
   
   .checkbox-column {
-    display: flex;
-    flex-direction: column;
+    margin-bottom: 20px;
   }
   
   .column-title {
-    font-size: 1.5vw;
+    font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
     text-align: center;
@@ -133,7 +137,7 @@
   .checkbox-item {
     display: flex;
     align-items: center;
-    font-size: 1.2vw;
+    font-size: 16px;
     margin-bottom: 5px;
   }
   
@@ -144,23 +148,22 @@
   }
   
   .aeon-infinities {
-    grid-column: 1 / -1;
     margin-top: 20px;
-    font-size: 1.5vw;
+    font-size: 16px;
     text-align: center;
   }
   
   .confirm-button {
-    grid-column: 1 / -1;
     margin-top: 20px;
     padding: 10px 20px;
-    font-size: 1.2vw;
+    font-size: 16px;
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    width: 100%;
   }
   
   .confirm-button:hover {
@@ -177,7 +180,7 @@
     bottom: 20px;
     right: 20px;
     padding: 10px 20px;
-    font-size: 1.2vw;
+    font-size: 16px;
     background-color: #008CBA;
     color: white;
     border: none;
@@ -195,8 +198,8 @@
     position: fixed;
     bottom: 70px;
     right: 20px;
-    width: 300px;
-    max-height: 400px;
+    left: 20px;
+    max-height: 60vh;
     overflow-y: auto;
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 5px;
@@ -205,7 +208,7 @@
   
   .history-item {
     margin-bottom: 10px;
-    font-size: 1vw;
+    font-size: 14px;
     color: #fff;
   }
   
@@ -218,72 +221,100 @@
     0% { opacity: 0.5; }
     100% { opacity: 1; }
   }
+
+  @media (max-width: 600px) {
+    .era-number {
+      font-size: 48px;
+    }
+    
+    .era-text {
+      font-size: 20px;
+    }
+    
+    .cycle-text {
+      font-size: 18px;
+    }
+    
+    .countdown {
+      font-size: 14px;
+    }
+    
+    .sunrise-times {
+      font-size: 12px;
+    }
+    
+    .checkbox-item {
+      font-size: 14px;
+    }
+    
+    .confirm-button {
+      font-size: 14px;
+    }
+  }
 </style>
 </head>
 <body>
 <div class="stars"></div>
 <div class="container">
   <div class="last-entry" id="lastEntry"></div>
-  <div class="main-content">
-    <div class="era-info">
-      <div class="era-number" id="eraNumber"></div>
-      <div class="era-text">Эра</div>
-      <div class="cycle-text" id="cycleText">Четвертый цикл</div>
-      <div class="countdown" id="countdown"></div>
-      <div class="sunrise-times" id="sunriseTimes"></div>
-      <div id="sunrise">
-        <div id="sun"></div>
+  <div class="era-info">
+    <div class="era-number" id="eraNumber"></div>
+    <div class="era-text">Эра</div>
+    <div class="cycle-text" id="cycleText">Четвертый цикл</div>
+    <div class="countdown" id="countdown"></div>
+    <div class="sunrise-times" id="sunriseTimes"></div>
+    <div id="sunrise">
+      <div id="sun"></div>
+    </div>
+  </div>
+  <div class="checkboxes">
+    <div class="checkbox-column">
+      <div class="column-title">Ма</div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="potential"> <label for="potential">Потенциал</label>
+      </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="balance"> <label for="balance">Баланс</label>
+      </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="inspiration"> <label for="inspiration">Вдохновение</label>
+      </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="fantasy"> <label for="fantasy">Фантазия</label>
+      </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="space"> <label for="space">Пространство</label>
       </div>
     </div>
-    <div class="checkboxes">
-      <div class="checkbox-column">
-        <div class="column-title">Ма</div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="potential"> <label for="potential">Потенциал</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="balance"> <label for="balance">Баланс</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="inspiration"> <label for="inspiration">Вдохновение</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="fantasy"> <label for="fantasy">Фантазия</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="space"> <label for="space">Пространство</label>
-        </div>
+    <div class="checkbox-column">
+      <div class="column-title">Жи</div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="realization"> <label for="realization">Реализация</label>
       </div>
-      <div class="checkbox-column">
-        <div class="column-title">Жи</div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="realization"> <label for="realization">Реализация</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="creation"> <label for="creation">Созидание</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="energy"> <label for="energy">Энергия</label>
-        </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="creation"> <label for="creation">Созидание</label>
       </div>
-      <div class="checkbox-column">
-        <div class="column-title">Кун</div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="unity"> <label for="unity">Единство</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="creativity"> <label for="creativity">Творчество</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="life"> <label for="life">Жизнь</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="joy"> <label for="joy">Радость</label>
-        </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="energy"> <label for="energy">Энергия</label>
       </div>
-      <div class="aeon-infinities" id="aeonInfinities">Эон бесконечностей: </div>
-      <button class="confirm-button" id="confirmButton" disabled>Подтвердить выбор</button>
     </div>
+    <div class="checkbox-column">
+      <div class="column-title">Кун</div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="unity"> <label for="unity">Единство</label>
+      </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="creativity"> <label for="creativity">Творчество</label>
+      </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="life"> <label for="life">Жизнь</label>
+      </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="joy"> <label for="joy">Радость</label>
+      </div>
+    </div>
+    <div class="aeon-infinities" id="aeonInfinities">Эон бесконечностей: </div>
+    <button class="confirm-button" id="confirmButton" disabled>Подтвердить выбор</button>
   </div>
 </div>
 
