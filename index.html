@@ -28,7 +28,8 @@
   
   .container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
     width: 90%;
     max-width: 1200px;
     padding: 40px;
@@ -36,6 +37,19 @@
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(5px);
+  }
+  
+  .last-entry {
+    font-size: 1.5vw;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .main-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
   }
   
   .era-info {
@@ -209,64 +223,67 @@
 <body>
 <div class="stars"></div>
 <div class="container">
-  <div class="era-info">
-    <div class="era-number" id="eraNumber"></div>
-    <div class="era-text">Эра</div>
-    <div class="cycle-text" id="cycleText">Четвертый цикл</div>
-    <div class="countdown" id="countdown"></div>
-    <div class="sunrise-times" id="sunriseTimes"></div>
-    <div id="sunrise">
-      <div id="sun"></div>
-    </div>
-  </div>
-  <div class="checkboxes">
-    <div class="checkbox-column">
-      <div class="column-title">Ма</div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="potential"> <label for="potential">Потенциал</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="balance"> <label for="balance">Баланс</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="inspiration"> <label for="inspiration">Вдохновение</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="fantasy"> <label for="fantasy">Фантазия</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="space"> <label for="space">Пространство</label>
+  <div class="last-entry" id="lastEntry"></div>
+  <div class="main-content">
+    <div class="era-info">
+      <div class="era-number" id="eraNumber"></div>
+      <div class="era-text">Эра</div>
+      <div class="cycle-text" id="cycleText">Четвертый цикл</div>
+      <div class="countdown" id="countdown"></div>
+      <div class="sunrise-times" id="sunriseTimes"></div>
+      <div id="sunrise">
+        <div id="sun"></div>
       </div>
     </div>
-    <div class="checkbox-column">
-      <div class="column-title">Жи</div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="realization"> <label for="realization">Реализация</label>
+    <div class="checkboxes">
+      <div class="checkbox-column">
+        <div class="column-title">Ма</div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="potential"> <label for="potential">Потенциал</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="balance"> <label for="balance">Баланс</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="inspiration"> <label for="inspiration">Вдохновение</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="fantasy"> <label for="fantasy">Фантазия</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="space"> <label for="space">Пространство</label>
+        </div>
       </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="creation"> <label for="creation">Созидание</label>
+      <div class="checkbox-column">
+        <div class="column-title">Жи</div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="realization"> <label for="realization">Реализация</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="creation"> <label for="creation">Созидание</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="energy"> <label for="energy">Энергия</label>
+        </div>
       </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="energy"> <label for="energy">Энергия</label>
+      <div class="checkbox-column">
+        <div class="column-title">Кун</div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="unity"> <label for="unity">Единство</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="creativity"> <label for="creativity">Творчество</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="life"> <label for="life">Жизнь</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="joy"> <label for="joy">Радость</label>
+        </div>
       </div>
+      <div class="aeon-infinities" id="aeonInfinities">Эон бесконечностей: </div>
+      <button class="confirm-button" id="confirmButton" disabled>Подтвердить выбор</button>
     </div>
-    <div class="checkbox-column">
-      <div class="column-title">Кун</div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="unity"> <label for="unity">Единство</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="creativity"> <label for="creativity">Творчество</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="life"> <label for="life">Жизнь</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="joy"> <label for="joy">Радость</label>
-      </div>
-    </div>
-    <div class="aeon-infinities" id="aeonInfinities">Эон бесконечностей: </div>
-    <button class="confirm-button" id="confirmButton">Подтвердить выбор</button>
   </div>
 </div>
 
@@ -280,6 +297,7 @@ const DateTime = luxon.DateTime;
 let currentCycle = 4;
 let history = [];
 let isSelectionConfirmed = false;
+let nextEraTime;
 
 function createStars() {
   const starsContainer = document.querySelector('.stars');
@@ -337,6 +355,8 @@ function updateEraAndCountdown() {
     nextSunrise = tomorrowSunrise;
   }
 
+  nextEraTime = nextSunrise;
+
   const timeUntilNextEra = nextSunrise.diff(now, ['hours', 'minutes', 'seconds']);
   document.getElementById('countdown').textContent = `${countdownText} ${timeUntilNextEra.hours} часов, ${timeUntilNextEra.minutes} минут, ${Math.floor(timeUntilNextEra.seconds)} секунд`;
 
@@ -351,8 +371,10 @@ function updateEraAndCountdown() {
   // Проверяем, наступила ли новая эра
   if (now >= nextSunrise) {
     isSelectionConfirmed = false;
-    enableCheckboxes();
+    enableConfirmButton();
   }
+
+  updateConfirmButtonState();
 }
 
 function updateAeonInfinities() {
@@ -367,6 +389,7 @@ function setupCheckboxes() {
     checkbox.addEventListener('change', () => {
       updateAeonInfinities();
       checkCycleCompletion();
+      updateConfirmButtonState();
     });
   });
 }
@@ -404,18 +427,23 @@ function confirmSelection() {
   const checkedBoxes = document.querySelectorAll('.checkboxes input[type="checkbox"]:checked');
   const checkedNames = Array.from(checkedBoxes).map(box => box.nextElementSibling.textContent);
   const currentEra = getCurrentEra();
-  const historyEntry = `Эра ${currentEra}. Цикл ${currentCycle}. ${checkedNames.join(', ')}`;
-  history.push(historyEntry);
-  updateHistoryPanel();
+  const historyEntry = `Эра ${currentEra}. Цикл ${currentCycle}. Эон ${checkedNames.join(', ')}`;
   
-  // Сохраняем историю в локальное хранилище
-  localStorage.setItem('eraHistory', JSON.stringify(history));
-  
-  // Отправляем данные на сервер (имитация)
-  console.log('Отправка данных на сервер:', historyEntry);
+  // Проверяем, нет ли уже такой записи в истории
+  if (!history.includes(historyEntry)) {
+    history.push(historyEntry);
+    updateHistoryPanel();
+    updateLastEntry();
+    
+    // Сохраняем историю в локальное хранилище
+    localStorage.setItem('eraHistory', JSON.stringify(history));
+    
+    // Отправляем данные на сервер (имитация)
+    console.log('Отправка данных на сервер:', historyEntry);
+  }
   
   isSelectionConfirmed = true;
-  disableCheckboxes();
+  disableConfirmButton();
 }
 
 function updateHistoryPanel() {
@@ -429,21 +457,35 @@ function updateHistoryPanel() {
   });
 }
 
+function updateLastEntry() {
+  const lastEntryElement = document.getElementById('lastEntry');
+  if (history.length > 0) {
+    lastEntryElement.textContent = history[history.length - 1];
+  } else {
+    lastEntryElement.textContent = '';
+  }
+}
+
 function toggleHistoryPanel() {
   const historyPanel = document.getElementById('historyPanel');
   historyPanel.style.display = historyPanel.style.display === 'none' ? 'block' : 'none';
 }
 
-function disableCheckboxes() {
-  const checkboxes = document.querySelectorAll('.checkboxes input[type="checkbox"]');
-  checkboxes.forEach(checkbox => checkbox.disabled = true);
+function disableConfirmButton() {
   document.getElementById('confirmButton').disabled = true;
 }
 
-function enableCheckboxes() {
-  const checkboxes = document.querySelectorAll('.checkboxes input[type="checkbox"]');
-  checkboxes.forEach(checkbox => checkbox.disabled = false);
+function enableConfirmButton() {
   document.getElementById('confirmButton').disabled = false;
+}
+
+function updateConfirmButtonState() {
+  const now = DateTime.now().setZone("Europe/Minsk");
+  const checkedBoxes = document.querySelectorAll('.checkboxes input[type="checkbox"]:checked');
+  const isAnyChecked = checkedBoxes.length > 0;
+  const isNewEra = now >= nextEraTime;
+
+  document.getElementById('confirmButton').disabled = isSelectionConfirmed || !isAnyChecked || !isNewEra;
 }
 
 function loadSavedData() {
@@ -457,6 +499,7 @@ function loadSavedData() {
   if (savedHistory) {
     history = JSON.parse(savedHistory);
     updateHistoryPanel();
+    updateLastEntry();
   }
 }
 
