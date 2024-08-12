@@ -298,6 +298,7 @@ let currentCycle = 4;
 let history = [];
 let isSelectionConfirmed = false;
 let nextEraTime;
+let currentEra;
 
 function createStars() {
   const starsContainer = document.querySelector('.stars');
@@ -339,7 +340,7 @@ function getCurrentEra() {
 function updateEraAndCountdown() {
   const now = DateTime.now().setZone("Europe/Minsk");
   const { todaySunrise, tomorrowSunrise } = getSunriseTimes();
-  const currentEra = getCurrentEra();
+  currentEra = getCurrentEra();
 
   document.getElementById('eraNumber').textContent = currentEra;
   document.getElementById('cycleText').textContent = `${currentCycle}-й цикл`;
@@ -360,17 +361,13 @@ function updateEraAndCountdown() {
   const timeUntilNextEra = nextSunrise.diff(now, ['hours', 'minutes', 'seconds']);
   document.getElementById('countdown').textContent = `${countdownText} ${timeUntilNextEra.hours} часов, ${timeUntilNextEra.minutes} минут, ${Math.floor(timeUntilNextEra.seconds)} секунд`;
 
-  // Обновляем времена восхода солнца
   document.getElementById('sunriseTimes').textContent = `Восход сегодня: ${todaySunrise.toFormat('HH:mm')} | Восход завтра: ${tomorrowSunrise.toFormat('HH:mm')}`;
 
-  // Анимация восхода солнца
   const dayProgress = (now.hour * 3600 + now.minute * 60 + now.second) / 86400;
   const sunPosition = Math.max(0, Math.min(dayProgress * 200 - 30, 70));
   document.getElementById('sun').style.bottom = `${sunPosition}px`;
 
-  // Проверяем, наступила ли новая эра
-  if (now >= nextSunrise) {
-    isSelectionConfirmed = false;
+  if (now >= nextSunrise && !isSelectionConfirmed) {
     enableConfirmButton();
   }
 
@@ -388,7 +385,6 @@ function setupCheckboxes() {
   checkboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
       updateAeonInfinities();
-      checkCycleCompletion();
       updateConfirmButtonState();
     });
   });
@@ -408,15 +404,12 @@ function checkCycleCompletion() {
   if (columnCounts.every(count => count === columnCounts[0] && count > 0)) {
     currentCycle++;
     document.getElementById('cycleText').textContent = `${currentCycle}-й цикл`;
-    // Сбрасываем все галочки
+    
     const checkboxes = document.querySelectorAll('.checkboxes input[type="checkbox"]');
     checkboxes.forEach(checkbox => checkbox.checked = false);
     updateAeonInfinities();
     
-    // Сохраняем новый цикл в локальное хранилище
     localStorage.setItem('currentCycle', currentCycle);
-    
-    // Отправляем данные о новом цикле на сервер (имитация)
     console.log('Отправка данных о новом цикле на сервер:', currentCycle);
   }
 }
@@ -426,21 +419,18 @@ function confirmSelection() {
   
   const checkedBoxes = document.querySelectorAll('.checkboxes input[type="checkbox"]:checked');
   const checkedNames = Array.from(checkedBoxes).map(box => box.nextElementSibling.textContent);
-  const currentEra = getCurrentEra();
   const historyEntry = `Эра ${currentEra}. Цикл ${currentCycle}. Эон ${checkedNames.join(', ')}`;
   
-  // Проверяем, нет ли уже такой записи в истории
   if (!history.includes(historyEntry)) {
     history.push(historyEntry);
     updateHistoryPanel();
     updateLastEntry();
     
-    // Сохраняем историю в локальное хранилище
     localStorage.setItem('eraHistory', JSON.stringify(history));
-    
-    // Отправляем данные на сервер (имитация)
     console.log('Отправка данных на сервер:', historyEntry);
   }
+  
+  checkCycleCompletion();
   
   isSelectionConfirmed = true;
   disableConfirmButton();
@@ -512,15 +502,10 @@ setInterval(updateEraAndCountdown, 1000);
 document.getElementById('confirmButton').addEventListener('click', confirmSelection);
 document.getElementById('historyButton').addEventListener('click', toggleHistoryPanel);
 
-// Имитация получения данных с сервера
 function fetchDataFromServer() {
-  // В реальном приложении здесь был бы запрос к серверу
   console.log('Получение данных с сервера...');
-  // Обновление данных на основе полученной информации
-  // updateDataFromServer(receivedData);
 }
 
-// Запускаем периодическую проверку обновлений с сервера
-setInterval(fetchDataFromServer, 60000); // каждую минуту
+setInterval(fetchDataFromServer, 60000);
 </script>
 </body></html>
