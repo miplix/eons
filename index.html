@@ -5,320 +5,105 @@
 <title>Четвертый Цикл - Эра Tracker</title>
 <style>
   body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
     margin: 0;
-    padding: 0;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
     min-height: 100vh;
-    background-color: #000;
-    font-family: Arial, sans-serif;
-    color: #fff;
-    overflow-x: hidden;
   }
-  
-  .stars {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: -1;
-  }
-  
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-  
-  .last-entry {
-    font-size: 16px;
+  .last-entry, .era-info {
+    text-align: center;
     margin-bottom: 20px;
-    text-align: center;
-    width: 100%;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
   }
-  
-  .era-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 20px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(5px);
-  }
-  
-  .era-number {
-    font-size: 60px;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-    animation: pulse 2s infinite alternate;
-  }
-  
-  .era-text {
-    font-size: 24px;
-    margin-top: 10px;
-    color: #fff;
-  }
-  
-  .cycle-text {
-    font-size: 20px;
-    margin-top: 5px;
-    color: #ccc;
-  }
-  
-  .countdown {
-    font-size: 16px;
-    margin-top: 15px;
-    color: #ccc;
-    text-align: center;
-  }
-  
-  .sunrise-times {
-    font-size: 14px;
-    margin-top: 10px;
-    color: #ccc;
-    text-align: center;
-  }
-  
-  #sunrise {
-    width: 100%;
-    height: 60px;
-    position: relative;
-    overflow: hidden;
-    margin-top: 15px;
-  }
-  
-  #sun {
-    width: 40px;
-    height: 40px;
-    background: #ffdb58;
-    border-radius: 50%;
-    position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    box-shadow: 0 0 20px #ffdb58;
-    transition: bottom 1s ease-in-out;
-  }
-  
   .checkboxes {
     display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 20px;
-  }
-  
-  .checkbox-column {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
     margin-bottom: 20px;
   }
-  
-  .column-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    text-align: center;
+  .column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .checkbox-item {
+  .checkbox-label {
     display: flex;
     align-items: center;
-    font-size: 16px;
     margin-bottom: 5px;
   }
-  
-  .checkbox-item input[type="checkbox"] {
-    margin-right: 10px;
-    width: 20px;
-    height: 20px;
-  }
-  
-  .aeon-infinities {
-    margin-top: 20px;
-    font-size: 16px;
-    text-align: center;
-  }
-  
-  .confirm-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
+  button {
     background-color: #4CAF50;
-    color: white;
     border: none;
-    border-radius: 5px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
     cursor: pointer;
-    transition: background-color 0.3s;
-    width: 100%;
   }
-  
-  .confirm-button:hover {
-    background-color: #45a049;
-  }
-  
-  .confirm-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-  }
-  
-  .history-button {
+  #historyButton {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #008CBA;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
   }
-  
-  .history-button:hover {
-    background-color: #007B9A;
-  }
-  
   .history-panel {
     display: none;
     position: fixed;
     bottom: 70px;
     right: 20px;
-    left: 20px;
-    max-height: 60vh;
-    overflow-y: auto;
     background-color: rgba(0, 0, 0, 0.8);
-    border-radius: 5px;
     padding: 20px;
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
   }
-  
-  .history-item {
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: #fff;
+  .star {
+    position: fixed;
+    background-color: #fff;
+    border-radius: 50%;
+    animation: twinkle 1s infinite alternate;
   }
-  
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.05); }
-  }
-
   @keyframes twinkle {
-    0% { opacity: 0.5; }
-    100% { opacity: 1; }
-  }
-
-  @media (max-width: 600px) {
-    .era-number {
-      font-size: 48px;
-    }
-    
-    .era-text {
-      font-size: 20px;
-    }
-    
-    .cycle-text {
-      font-size: 18px;
-    }
-    
-    .countdown {
-      font-size: 14px;
-    }
-    
-    .sunrise-times {
-      font-size: 12px;
-    }
-    
-    .checkbox-item {
-      font-size: 14px;
-    }
-    
-    .confirm-button {
-      font-size: 14px;
-    }
+    from {opacity: 0.5;}
+    to {opacity: 1;}
   }
 </style>
 </head>
 <body>
-<div class="stars"></div>
-<div class="container">
-  <div class="last-entry" id="lastEntry"></div>
-  <div class="era-info">
-    <div class="era-number" id="eraNumber"></div>
-    <div class="era-text">Эра</div>
-    <div class="cycle-text" id="cycleText">Четвертый цикл</div>
-    <div class="countdown" id="countdown"></div>
-    <div class="sunrise-times" id="sunriseTimes"></div>
-    <div id="sunrise">
-      <div id="sun"></div>
-    </div>
+<div class="last-entry" id="lastEntry"></div>
+<div class="era-info" id="eraInfo"></div>
+<div class="checkboxes">
+  <div class="column">
+    <h3>Ма</h3>
+    <label class="checkbox-label"><input type="checkbox"><span>Потенциал</span></label>
+    <label class="checkbox-label"><input type="checkbox"><span>Баланс</span></label>
+    <label class="checkbox-label"><input type="checkbox"><span>Вдохновение</span></label>
+    <label class="checkbox-label"><input type="checkbox"><span>Фантазия</span></label>
+    <label class="checkbox-label"><input type="checkbox"><span>Пространство</span></label>
   </div>
-  <div class="checkboxes">
-    <div class="checkbox-column">
-      <div class="column-title">Ма</div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="potential"> <label for="potential">Потенциал</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="balance"> <label for="balance">Баланс</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="inspiration"> <label for="inspiration">Вдохновение</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="fantasy"> <label for="fantasy">Фантазия</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="space"> <label for="space">Пространство</label>
-      </div>
-    </div>
-    <div class="checkbox-column">
-      <div class="column-title">Жи</div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="realization"> <label for="realization">Реализация</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="creation"> <label for="creation">Созидание</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="energy"> <label for="energy">Энергия</label>
-      </div>
-    </div>
-    <div class="checkbox-column">
-      <div class="column-title">Кун</div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="unity"> <label for="unity">Единство</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="creativity"> <label for="creativity">Творчество</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="life"> <label for="life">Жизнь</label>
-      </div>
-      <div class="checkbox-item">
-        <input type="checkbox" id="joy"> <label for="joy">Радость</label>
-      </div>
-    </div>
-    <div class="aeon-infinities" id="aeonInfinities">Эон бесконечностей: </div>
-    <button class="confirm-button" id="confirmButton" disabled>Подтвердить выбор</button>
+  <div class="column">
+    <h3>Жи</h3>
+    <label class="checkbox-label"><input type="checkbox"><span>Реализация</span></label>
+    <label class="checkbox-label"><input type="checkbox"><span>Созидание</span></label>
+    <label class="checkbox-label"><input type="checkbox"><span>Энергия</span></label>
+  </div>
+  <div class="column">
+    <h3>Кун</h3>
+    <label class="checkbox-label"><input type="checkbox"><span>Единство</span></label>
+    <label class="checkbox-label"><input type="checkbox"><span>Творчество</span></label>
+    <label class="checkbox-label"><input type="checkbox"><span>Жизнь</span></label>
+    <label class="checkbox-label"><input type="checkbox"><span>Радость</span></label>
   </div>
 </div>
-
-<button class="history-button" id="historyButton">История</button>
+<button id="confirmButton">Подтвердить</button>
+<button id="historyButton">История</button>
 <div class="history-panel" id="historyPanel"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
@@ -327,132 +112,69 @@
 const DateTime = luxon.DateTime;
 let currentCycle = 4;
 let history = [];
-let isSelectionConfirmed = false;
 let nextEraTime;
-let currentEra;
+let currentEra = 121;
 
 function createStars() {
-  const starsContainer = document.querySelector('.stars');
-  const starCount = 200;
-
+  const starCount = 100;
   for (let i = 0; i < starCount; i++) {
     const star = document.createElement('div');
-    star.style.position = 'absolute';
+    star.className = 'star';
     star.style.left = `${Math.random() * 100}%`;
     star.style.top = `${Math.random() * 100}%`;
-    star.style.width = `${Math.random() * 2 + 1}px`;
+    star.style.width = `${Math.random() * 3}px`;
     star.style.height = star.style.width;
-    star.style.backgroundColor = '#fff';
-    star.style.borderRadius = '50%';
-    star.style.opacity = Math.random() * 0.5 + 0.5;
-    star.style.animation = `twinkle ${Math.random() * 4 + 2}s infinite alternate`;
-    starsContainer.appendChild(star);
+    document.body.appendChild(star);
   }
 }
 
-function getSunriseTimes() {
-  const now = DateTime.now().setZone("Europe/Minsk");
-  const lat = 53.9; // Широта Минска
-  const lon = 27.5667; // Долгота Минска
-
-  const todaySunrise = DateTime.fromJSDate(SunCalc.getTimes(now.toJSDate(), lat, lon).sunrise).setZone("Europe/Minsk");
-  const tomorrowSunrise = DateTime.fromJSDate(SunCalc.getTimes(now.plus({ days: 1 }).toJSDate(), lat, lon).sunrise).setZone("Europe/Minsk");
-
-  return { todaySunrise, tomorrowSunrise };
-}
-
-function getCurrentEra() {
-  const { todaySunrise } = getSunriseTimes();
-  const now = DateTime.now().setZone("Europe/Minsk");
-  const daysSince = Math.floor(now.diff(todaySunrise.set({ year: 2024, month: 4, day: 26 }), 'days').days);
-  return daysSince + 19 - 7; // Вычитаем 7 эр согласно предыдущему условию
+function loadSavedData() {
+  const savedHistory = localStorage.getItem('eraHistory');
+  if (savedHistory) {
+    history = JSON.parse(savedHistory);
+    updateHistoryPanel();
+    updateLastEntry();
+  }
+  const savedCycle = localStorage.getItem('currentCycle');
+  if (savedCycle) {
+    currentCycle = parseInt(savedCycle, 10);
+  }
 }
 
 function updateEraAndCountdown() {
-  const now = DateTime.now().setZone("Europe/Minsk");
-  const { todaySunrise, tomorrowSunrise } = getSunriseTimes();
-  currentEra = getCurrentEra();
+  const now = DateTime.now().setZone('Europe/Moscow');
+  const todaySunrise = getSunrise(now);
+  const tomorrowSunrise = getSunrise(now.plus({ days: 1 }));
 
-  document.getElementById('eraNumber').textContent = currentEra;
-  document.getElementById('cycleText').textContent = `${currentCycle}-й цикл`;
-
-  let countdownText;
-  let nextSunrise;
-
-  if (now < todaySunrise) {
-    countdownText = "До начала новой эры:";
-    nextSunrise = todaySunrise;
-  } else {
-    countdownText = "До следующей эры:";
-    nextSunrise = tomorrowSunrise;
+  if (!nextEraTime || now >= nextEraTime) {
+    nextEraTime = todaySunrise > now ? todaySunrise : tomorrowSunrise;
+    if (now >= todaySunrise) {
+      currentEra++;
+    }
   }
 
-  nextEraTime = nextSunrise;
-
-  const timeUntilNextEra = nextSunrise.diff(now, ['hours', 'minutes', 'seconds']);
-  document.getElementById('countdown').textContent = `${countdownText} ${timeUntilNextEra.hours} часов, ${timeUntilNextEra.minutes} минут, ${Math.floor(timeUntilNextEra.seconds)} секунд`;
-
-  document.getElementById('sunriseTimes').textContent = `Восход сегодня: ${todaySunrise.toFormat('HH:mm')} | Восход завтра: ${tomorrowSunrise.toFormat('HH:mm')}`;
-
-  const dayProgress = (now.hour * 3600 + now.minute * 60 + now.second) / 86400;
-  const sunPosition = Math.max(0, Math.min(dayProgress * 200 - 30, 70));
-  document.getElementById('sun').style.bottom = `${sunPosition}px`;
-
-  if (now >= nextSunrise && !isSelectionConfirmed) {
-    enableConfirmButton();
-  }
-
-  updateConfirmButtonState();
+  const timeUntilNextEra = nextEraTime.diff(now).toFormat("hh:mm:ss");
+  const eraInfo = document.getElementById('eraInfo');
+  eraInfo.innerHTML = `
+    Текущая Эра: ${currentEra}<br>
+    До следующей Эры: ${timeUntilNextEra}<br>
+    Восход сегодня: ${todaySunrise.toFormat("HH:mm:ss")}<br>
+    Восход завтра: ${tomorrowSunrise.toFormat("HH:mm:ss")}
+  `;
 }
 
-function updateAeonInfinities() {
-  const checkedBoxes = document.querySelectorAll('.checkboxes input[type="checkbox"]:checked');
-  const checkedNames = Array.from(checkedBoxes).map(box => box.nextElementSibling.textContent);
-  document.getElementById('aeonInfinities').textContent = `Эон бесконечностей: ${checkedNames.join(', ')}`;
-}
-
-function setupCheckboxes() {
-  const checkboxes = document.querySelectorAll('.checkboxes input[type="checkbox"]');
-  checkboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-      updateAeonInfinities();
-      updateConfirmButtonState();
-    });
-  });
-}
-
-function checkCycleCompletion() {
-  const columns = [
-    ['potential', 'balance', 'inspiration', 'fantasy', 'space'],
-    ['realization', 'creation', 'energy'],
-    ['unity', 'creativity', 'life', 'joy']
-  ];
-
-  const columnCounts = columns.map(column => 
-    column.filter(id => document.getElementById(id).checked).length
-  );
-
-  if (columnCounts.every(count => count === columnCounts[0] && count > 0)) {
-    currentCycle++;
-    document.getElementById('cycleText').textContent = `${currentCycle}-й цикл`;
-    
-    const checkboxes = document.querySelectorAll('.checkboxes input[type="checkbox"]');
-    checkboxes.forEach(checkbox => checkbox.checked = false);
-    updateAeonInfinities();
-    
-    localStorage.setItem('currentCycle', currentCycle);
-    console.log('Отправка данных о новом цикле на сервер:', currentCycle);
-  }
+function getSunrise(date) {
+  const sunTimes = SunCalc.getTimes(date.toJSDate(), 55.7558, 37.6173);
+  return DateTime.fromJSDate(sunTimes.sunrise).setZone('Europe/Moscow');
 }
 
 function confirmSelection() {
-  if (isSelectionConfirmed) return;
-  
   const checkedBoxes = document.querySelectorAll('.checkboxes input[type="checkbox"]:checked');
   const checkedNames = Array.from(checkedBoxes).map(box => box.nextElementSibling.textContent);
   const historyEntry = `Эра ${currentEra}. Цикл ${currentCycle}. Эон ${checkedNames.join(', ')}`;
   
-  if (!history.includes(historyEntry)) {
+  if (checkedNames.length > 0) {
+    // Обновляем историю
     history.push(historyEntry);
     updateHistoryPanel();
     updateLastEntry();
@@ -462,20 +184,35 @@ function confirmSelection() {
   }
   
   checkCycleCompletion();
+}
+
+function updateConfirmButtonState() {
+  const checkedBoxes = document.querySelectorAll('.checkboxes input[type="checkbox"]:checked');
+  const isAnyChecked = checkedBoxes.length > 0;
+  document.getElementById('confirmButton').disabled = !isAnyChecked;
+}
+
+function checkCycleCompletion() {
+  const columns = document.querySelectorAll('.column');
+  const checkedCounts = Array.from(columns).map(column => 
+    column.querySelectorAll('input[type="checkbox"]:checked').length
+  );
   
-  isSelectionConfirmed = true;
-  disableConfirmButton();
+  if (checkedCounts.every(count => count === checkedCounts[0]) && checkedCounts[0] > 0) {
+    currentCycle++;
+    localStorage.setItem('currentCycle', currentCycle);
+    console.log('Цикл завершен. Новый цикл:', currentCycle);
+  }
+}
+
+function toggleHistoryPanel() {
+  const panel = document.getElementById('historyPanel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
 }
 
 function updateHistoryPanel() {
-  const historyPanel = document.getElementById('historyPanel');
-  historyPanel.innerHTML = '';
-  history.forEach(entry => {
-    const historyItem = document.createElement('div');
-    historyItem.className = 'history-item';
-    historyItem.textContent = entry;
-    historyPanel.appendChild(historyItem);
-  });
+  const panel = document.getElementById('historyPanel');
+  panel.innerHTML = history.map(entry => `<div>${entry}</div>`).join('');
 }
 
 function updateLastEntry() {
@@ -483,45 +220,15 @@ function updateLastEntry() {
   if (history.length > 0) {
     lastEntryElement.textContent = history[history.length - 1];
   } else {
-    lastEntryElement.textContent = '';
+    lastEntryElement.textContent = 'Нет записей';
   }
 }
 
-function toggleHistoryPanel() {
-  const historyPanel = document.getElementById('historyPanel');
-  historyPanel.style.display = historyPanel.style.display === 'none' ? 'block' : 'none';
-}
-
-function disableConfirmButton() {
-  document.getElementById('confirmButton').disabled = true;
-}
-
-function enableConfirmButton() {
-  document.getElementById('confirmButton').disabled = false;
-}
-
-function updateConfirmButtonState() {
-  const now = DateTime.now().setZone("Europe/Minsk");
-  const checkedBoxes = document.querySelectorAll('.checkboxes input[type="checkbox"]:checked');
-  const isAnyChecked = checkedBoxes.length > 0;
-  const isNewEra = now >= nextEraTime;
-
-  document.getElementById('confirmButton').disabled = isSelectionConfirmed || !isAnyChecked || !isNewEra;
-}
-
-function loadSavedData() {
-  const savedCycle = localStorage.getItem('currentCycle');
-  if (savedCycle) {
-    currentCycle = parseInt(savedCycle);
-    document.getElementById('cycleText').textContent = `${currentCycle}-й цикл`;
-  }
-  
-  const savedHistory = localStorage.getItem('eraHistory');
-  if (savedHistory) {
-    history = JSON.parse(savedHistory);
-    updateHistoryPanel();
-    updateLastEntry();
-  }
+function setupCheckboxes() {
+  const checkboxes = document.querySelectorAll('.checkboxes input[type="checkbox"]');
+  checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updateConfirmButtonState);
+  });
 }
 
 createStars();
