@@ -110,10 +110,10 @@
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 <script>
 const DateTime = luxon.DateTime;
-let currentCycle = 4;
-let history = [];
+let currentCycle = 4; // Установлен четвертый цикл
+let history = []; // Очищена история
 let nextEraTime;
-let currentEra = 123; // Обновлено значение текущей эры
+let currentEra = 123; // Текущая эра осталась 123-й
 
 function createStars() {
   const starCount = 100;
@@ -128,17 +128,12 @@ function createStars() {
   }
 }
 
-function loadSavedData() {
-  const savedHistory = localStorage.getItem('eraHistory');
-  if (savedHistory) {
-    history = JSON.parse(savedHistory);
-    updateHistoryPanel();
-    updateLastEntry();
-  }
-  const savedCycle = localStorage.getItem('currentCycle');
-  if (savedCycle) {
-    currentCycle = parseInt(savedCycle, 10);
-  }
+function clearSavedData() {
+  localStorage.removeItem('eraHistory');
+  localStorage.removeItem('currentCycle');
+  history = [];
+  updateHistoryPanel();
+  updateLastEntry();
 }
 
 function updateEraAndCountdown() {
@@ -172,7 +167,6 @@ function confirmSelection() {
   const historyEntry = `Эра ${currentEra}. Цикл ${currentCycle}. Эон ${checkedNames.join(', ')}`;
   
   if (checkedNames.length > 0) {
-    // Обновляем историю
     history.push(historyEntry);
     updateHistoryPanel();
     updateLastEntry();
@@ -230,7 +224,7 @@ function setupCheckboxes() {
 }
 
 createStars();
-loadSavedData();
+clearSavedData(); // Очищаем все сохраненные данные
 updateEraAndCountdown();
 setupCheckboxes();
 setInterval(updateEraAndCountdown, 1000);
