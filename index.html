@@ -142,7 +142,7 @@ function loadSavedData() {
 }
 
 function updateEraAndCountdown() {
-  const now = DateTime.now().setZone('Europe/Moscow');
+  const now = DateTime.now().setZone('Europe/Minsk');
   const todaySunrise = getSunrise(now);
   const tomorrowSunrise = getSunrise(now.plus({ days: 1 }));
 
@@ -164,8 +164,9 @@ function updateEraAndCountdown() {
 }
 
 function getSunrise(date) {
-  const sunTimes = SunCalc.getTimes(date.toJSDate(), 55.7558, 37.6173);
-  return DateTime.fromJSDate(sunTimes.sunrise).setZone('Europe/Moscow');
+  // Координаты Минска
+  const sunTimes = SunCalc.getTimes(date.toJSDate(), 53.9006, 27.5590);
+  return DateTime.fromJSDate(sunTimes.sunrise).setZone('Europe/Minsk');
 }
 
 function confirmSelection() {
