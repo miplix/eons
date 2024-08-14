@@ -113,7 +113,7 @@ const DateTime = luxon.DateTime;
 let currentCycle = 4;
 let history = [];
 let nextEraTime;
-let currentEra = 121;
+let currentEra = 123; // Обновлено значение текущей эры
 
 function createStars() {
   const starCount = 100;
@@ -148,9 +148,6 @@ function updateEraAndCountdown() {
 
   if (!nextEraTime || now >= nextEraTime) {
     nextEraTime = todaySunrise > now ? todaySunrise : tomorrowSunrise;
-    if (now >= todaySunrise) {
-      currentEra++;
-    }
   }
 
   const timeUntilNextEra = nextEraTime.diff(now).toFormat("hh:mm:ss");
