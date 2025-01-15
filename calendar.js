@@ -10,6 +10,18 @@ class AlternativeCalendar {
       longitude: 27.5590 // Minsk longitude
     };
     
+    this.eonDescriptions = {
+      1: 'Эон Огня',
+      2: 'Эон Воды(Веды)',
+      3: 'Эон Творчества',
+      4: 'Эон Каменной Виры',
+      5: 'Эон Единства',
+      6: 'Эон Внутреннего развития',
+      7: 'Эон Праздника и Перерождения',
+      8: 'Эон Таинства и Внутренней Силы',
+      9: 'Эон Творца'
+    };
+    
     this.initializeDisplay();
     this.updateCalendar();
     
@@ -99,6 +111,10 @@ class AlternativeCalendar {
     // Update Eon (based on day of week)
     const eon = this.getDayOfWeek(now);
     this.elements.eonNumber.textContent = this.currentEon;
+
+    // Update Eon subtitle
+    const subtitle = document.querySelector('.eon-subtitle');
+    subtitle.textContent = this.eonDescriptions[this.currentEon] || '';
 
     // Update Era
     const era = this.calculateEraDay();
