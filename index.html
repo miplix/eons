@@ -1,241 +1,50 @@
-
-<html><head><base href="https://websim.cyou/fourth-cycle-era-tracker/">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Четвертый Цикл - Эра Tracker</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #000;
-    color: #fff;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-  }
-  .last-entry, .era-info {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .checkboxes {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .column {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .checkbox-label {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-  }
-  button {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-  }
-  #historyButton {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-  }
-  .history-panel {
-    display: none;
-    position: fixed;
-    bottom: 70px;
-    right: 20px;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    border-radius: 5px;
-    max-height: 300px;
-    overflow-y: auto;
-  }
-  .star {
-    position: fixed;
-    background-color: #fff;
-    border-radius: 50%;
-    animation: twinkle 1s infinite alternate;
-  }
-  @keyframes twinkle {
-    from {opacity: 0.5;}
-    to {opacity: 1;}
-  }
-</style>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Календарь Эонов</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="last-entry" id="lastEntry"></div>
-<div class="era-info" id="eraInfo"></div>
-<div class="checkboxes">
-  <div class="column">
-    <h3>Ма</h3>
-    <label class="checkbox-label"><input type="checkbox"><span>Потенциал</span></label>
-    <label class="checkbox-label"><input type="checkbox"><span>Баланс</span></label>
-    <label class="checkbox-label"><input type="checkbox"><span>Вдохновение</span></label>
-    <label class="checkbox-label"><input type="checkbox"><span>Фантазия</span></label>
-    <label class="checkbox-label"><input type="checkbox"><span>Пространство</span></label>
+  <div class="bg-pattern">
+    <div class="bg-tile"></div>
   </div>
-  <div class="column">
-    <h3>Жи</h3>
-    <label class="checkbox-label"><input type="checkbox"><span>Реализация</span></label>
-    <label class="checkbox-label"><input type="checkbox"><span>Созидание</span></label>
-    <label class="checkbox-label"><input type="checkbox"><span>Энергия</span></label>
+  <div class="container">
+    <div class="calendar-wrapper">
+      <h1>Календарь Эонов</h1>
+      
+      <div class="current-date">
+        <div class="gregorian-date"></div>
+        <div class="sunrise-time"></div>
+      </div>
+
+      <div class="alt-calendar">
+        <div class="eon-display">
+          <span class="number"></span>
+          <span class="label">Эон</span>
+        </div>
+        
+        <div class="era-display">
+          <span class="number"></span>
+          <span class="label">Эра</span>
+        </div>
+        
+        <div class="cycle-display">
+          <span class="number"></span>
+          <span class="label">Цикл</span>
+        </div>
+      </div>
+
+      <div class="moon-phase">
+        <svg class="moon" viewBox="0 0 100 100">
+          <circle class="moon-circle" cx="50" cy="50" r="45"/>
+          <path class="moon-mask" d=""/>
+        </svg>
+      </div>
+
+      <div class="next-full-moon"></div>
+    </div>
   </div>
-  <div class="column">
-    <h3>Кун</h3>
-    <label class="checkbox-label"><input type="checkbox"><span>Единство</span></label>
-    <label class="checkbox-label"><input type="checkbox"><span>Творчество</span></label>
-    <label class="checkbox-label"><input type="checkbox"><span>Жизнь</span></label>
-    <label class="checkbox-label"><input type="checkbox"><span>Радость</span></label>
-  </div>
-</div>
-<button id="confirmButton">Подтвердить</button>
-<button id="historyButton">История</button>
-<div class="history-panel" id="historyPanel"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
-<script>
-const DateTime = luxon.DateTime;
-let currentCycle = 4; // Установлен четвертый цикл
-let history = []; // Очищена история
-let nextEraTime;
-let currentEra = 123; // Текущая эра осталась 123-й
-
-function createStars() {
-  const starCount = 100;
-  for (let i = 0; i < starCount; i++) {
-    const star = document.createElement('div');
-    star.className = 'star';
-    star.style.left = `${Math.random() * 100}%`;
-    star.style.top = `${Math.random() * 100}%`;
-    star.style.width = `${Math.random() * 3}px`;
-    star.style.height = star.style.width;
-    document.body.appendChild(star);
-  }
-}
-
-function clearSavedData() {
-  localStorage.removeItem('eraHistory');
-  localStorage.removeItem('currentCycle');
-  history = [];
-  updateHistoryPanel();
-  updateLastEntry();
-}
-
-function updateEraAndCountdown() {
-  const now = DateTime.now().setZone('Europe/Minsk');
-  const todaySunrise = getSunrise(now);
-  const tomorrowSunrise = getSunrise(now.plus({ days: 1 }));
-
-  if (!nextEraTime || now >= nextEraTime) {
-    nextEraTime = todaySunrise > now ? todaySunrise : tomorrowSunrise;
-  }
-
-  const timeUntilNextEra = nextEraTime.diff(now).toFormat("hh:mm:ss");
-  const eraInfo = document.getElementById('eraInfo');
-  eraInfo.innerHTML = `
-    Текущая Эра: ${currentEra}<br>
-    До следующей Эры: ${timeUntilNextEra}<br>
-    Восход сегодня: ${todaySunrise.toFormat("HH:mm:ss")}<br>
-    Восход завтра: ${tomorrowSunrise.toFormat("HH:mm:ss")}
-  `;
-}
-
-function getSunrise(date) {
-  // Координаты Минска
-  const sunTimes = SunCalc.getTimes(date.toJSDate(), 53.9006, 27.5590);
-  return DateTime.fromJSDate(sunTimes.sunrise).setZone('Europe/Minsk');
-}
-
-function confirmSelection() {
-  const checkedBoxes = document.querySelectorAll('.checkboxes input[type="checkbox"]:checked');
-  const checkedNames = Array.from(checkedBoxes).map(box => box.nextElementSibling.textContent);
-  const historyEntry = `Эра ${currentEra}. Цикл ${currentCycle}. Эон ${checkedNames.join(', ')}`;
-  
-  if (checkedNames.length > 0) {
-    history.push(historyEntry);
-    updateHistoryPanel();
-    updateLastEntry();
-    
-    localStorage.setItem('eraHistory', JSON.stringify(history));
-    console.log('Отправка данных на сервер:', historyEntry);
-  }
-  
-  checkCycleCompletion();
-}
-
-function updateConfirmButtonState() {
-  const checkedBoxes = document.querySelectorAll('.checkboxes input[type="checkbox"]:checked');
-  const isAnyChecked = checkedBoxes.length > 0;
-  document.getElementById('confirmButton').disabled = !isAnyChecked;
-}
-
-function checkCycleCompletion() {
-  const columns = document.querySelectorAll('.column');
-  const checkedCounts = Array.from(columns).map(column => 
-    column.querySelectorAll('input[type="checkbox"]:checked').length
-  );
-  
-  if (checkedCounts.every(count => count === checkedCounts[0]) && checkedCounts[0] > 0) {
-    currentCycle++;
-    localStorage.setItem('currentCycle', currentCycle);
-    console.log('Цикл завершен. Новый цикл:', currentCycle);
-  }
-}
-
-function toggleHistoryPanel() {
-  const panel = document.getElementById('historyPanel');
-  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-}
-
-function updateHistoryPanel() {
-  const panel = document.getElementById('historyPanel');
-  panel.innerHTML = history.map(entry => `<div>${entry}</div>`).join('');
-}
-
-function updateLastEntry() {
-  const lastEntryElement = document.getElementById('lastEntry');
-  if (history.length > 0) {
-    lastEntryElement.textContent = history[history.length - 1];
-  } else {
-    lastEntryElement.textContent = 'Нет записей';
-  }
-}
-
-function setupCheckboxes() {
-  const checkboxes = document.querySelectorAll('.checkboxes input[type="checkbox"]');
-  checkboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', updateConfirmButtonState);
-  });
-}
-
-createStars();
-clearSavedData(); // Очищаем все сохраненные данные
-updateEraAndCountdown();
-setupCheckboxes();
-setInterval(updateEraAndCountdown, 1000);
-
-document.getElementById('confirmButton').addEventListener('click', confirmSelection);
-document.getElementById('historyButton').addEventListener('click', toggleHistoryPanel);
-
-function fetchDataFromServer() {
-  console.log('Получение данных с сервера...');
-}
-
-setInterval(fetchDataFromServer, 60000);
-</script>
-</body></html>
+  <script src="calendar.js" type="module"></script>
+</body>
+</html>
